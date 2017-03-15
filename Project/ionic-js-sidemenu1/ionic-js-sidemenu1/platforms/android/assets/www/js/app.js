@@ -70,4 +70,25 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   })*/;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/inicial');
+
+  $("#newUser").on('submit', function (e) {
+
+      // prevent default submit action
+      e.preventDefault();
+
+      var serialized = $(this).serializeArray(),
+          obj = {};
+
+      // build key-values
+      $.each(serialized, function () {
+          obj[this.name] = this.value;
+      });
+
+      // and the json string
+      var json = JSON.stringify(obj);
+
+      console.log(json);
+      // send your data here...
+
+  });
 });

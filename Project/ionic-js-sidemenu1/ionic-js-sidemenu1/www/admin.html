@@ -24,9 +24,25 @@
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
+    <script src="lib/lokijs/src/lokijs.js"></script>
+    <script src="lib/lokijs/src/loki-angular.js"></script> 
+    <script src="js/loki-cordova-fs-adapter.js"></script>  
 </head>
 
 <body ng-app="starter">
-    <ion-nav-view></ion-nav-view>
+    <ion-nav-view>
+        <form id="newUser">
+            Nom:<br>
+            <input type="text" name="firstname" >
+            <br>
+            Cognom:<br>
+            <input type="text" name="lastname" >
+            <br>
+            Edat:<br>
+            <input type="text" name="age" >
+            <br><br>
+            <input type="submit" value="Introduir">
+        </form>
+    </ion-nav-view>
 </body>
 </html>
