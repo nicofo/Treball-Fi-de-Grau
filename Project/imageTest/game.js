@@ -1,4 +1,9 @@
-var game = new Phaser.Game((window.innerHeight*1562)/1080 , window.innerHeight, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, render: render });
+
+
+
+
+
+var game = new Phaser.Game((window.innerHeight*1620)/1080 , window.innerHeight, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: function() { this.gestures.update();}, render: render,eventstapped: eventHandler });
 
 var text;
 var counterBack = 0;
@@ -22,7 +27,7 @@ function create() {
     backimage.x = 0;
     backimage.y = 0;
     backimage.height = game.height;
-    backimage.width = (game.height*1562)/1080;
+    backimage.width = game.width;
     backimage.smoothed = false;
     //  Enables all kind of input actions on this image (click, etc)
     backimage.inputEnabled = true;
@@ -32,7 +37,7 @@ function create() {
     faceimage.x = 0;
     faceimage.y = 0;
     faceimage.height = game.height;
-    faceimage.width = (game.height*1562)/1080;
+    faceimage.width = game.width;
     faceimage.smoothed = false;
     faceimage.inputEnabled = true;
 
@@ -40,9 +45,17 @@ function create() {
     faceimage.input.pixelPerfectClick = true;
 
     text = game.add.text(250, 16, '', { fill: '#000000' });
+     this.gestures = new Gesture(this.game);
+     this.gestures.onTap.add(this.tapped, this);   
+     this.gestures.onHold.add(this.holded, this);   
+     this.gestures.onSwipe.add(this.swiped, this);
 
-    backimage.events.onInputDown.add(listenerBack, this);
-    faceimage.events.onInputDown.add(listenerFace, this);
+    //backimage.events.onInputDown.add(listenerBack, this);
+    //faceimage.events.onInputDown.add(listenerFace, this);
+    
+}
+function eventHandler(e, position){
+  console.log(e+" "+ position);
 }
 
 function listenerBack () {
