@@ -10,14 +10,18 @@ var counterBack = 0;
 var counterFace = 0;
 var onSwipe,onTap,onHold;
 var swipeDispatched,holdDispatched,isTouching,isHolding;
+var time_inicial=new Date();
+var listPoint=[];
+var timePoint=new Date();
+var listGestures=[];
 var TIMES = {
     HOLD: 150,
     SWIPE: 250
 };
 
 function preload () {
-    game.load.image('background', 'test1.png');
-    game.load.image('face', 'test1over.png');
+    game.load.image('reference', 'prova_01_B_gt_v2.png');
+    game.load.image('image', 'prova_01_B.jpg');
     
 
 }
@@ -26,14 +30,14 @@ function create() {
 
     //  This creates a simple sprite that is using our loaded image and
     //  displays it on-screen and assign it to a variable
-    bmdBack = game.make.bitmapData(game.width , game.height);
-    bmdBack.draw('background', 0,0,game.width , game.height);
-    bmdBack.update();
-    bmdBack.addToWorld();
-    bmdFace = game.make.bitmapData(game.width , game.height);
-    bmdFace.draw('face', 0,0,game.width , game.height);
-    bmdFace.update();
-    bmdFace.addToWorld();
+    bmdRef = game.make.bitmapData(game.width , game.height);
+    bmdRef.draw('reference', 0,0,game.width , game.height);
+    bmdRef.update();
+    bmdRef.addToWorld();
+    bmdImg = game.make.bitmapData(game.width , game.height);
+    bmdImg.draw('image', 0,0,game.width , game.height);
+    bmdImg.update();
+    bmdImg.addToWorld();
 
     /*var backimage = game.add.sprite(game.world.centerX  , game.world.centerY, 'background');
 
@@ -79,6 +83,7 @@ function create() {
     //faceimage.events.onInputDown.add(listenerFace, this);
     
 }
+
 function eventHandler(e, position){
   console.log(e+" "+ position);
 }
@@ -91,21 +96,19 @@ function holded(e, position){
 function swiped(e, position){
   text.text =(containsSprite(position)+" swip! ");
 }
+
 function containsSprite(position){
-    //console.log(""+faceimage.getBounds().contains(position.x, position.y)+", "+faceimage.getBounds().contains(game.input.x, game.input.y));
-    /*if (faceimage.contains(position))
-    {
-        return 'e.Cara';
+    
+    col = bmdRef.getPixel(position.x, position.y);
+    if (col.r > 250){
+        return 2;
+    }if(col.g >250){
+        return 1;
     }
-    return "e.Otro";
-    */
-    col = bmdFace.getPixel(position.x, position.y);
-    if (col.a > 0){
-        return 'e.Cara';
-    }
-    return "e.Otro";
+    return 0;
 
 }
+/*
 function updateSwipe(distance, duration) {
     if (duration === -1) {
         this.swipeDispatched = false;
@@ -147,15 +150,82 @@ function updateTouch(distance, duration) {
         isHolding = false;
     }
 }
+/*
 function update(){
     var distance = Phaser.Point.distance(this.game.input.activePointer.position, this.game.input.activePointer.positionDown);
     var duration = this.game.input.activePointer.duration;
     console.log("hi");
     updateSwipe(distance, duration);
     updateTouch(distance, duration);
+    console.log(this.game.input.activePointer.isDown);
 
 }
+*/
+function detectGesture(touchDuration){ 
+    var distance = Phaser.Point.distance(listPoint[listPoint.length - 1].position, listPoint[listPoint.length - 1].positionDown);
+    if(distance< 10){
+        if(touchDuration> TIMES.HOLD){
+            return "Press";
+        }else{
+            return "Tap";
+        }
+    }
+    /*if(){
 
+    }if(){
+
+    }*/
+    return "Stroke";
+}
+function pocessGesture(){
+    var touchDuration= (new Date() - timePoint);
+    var place="otro";
+    var answer=0;
+    console.log(listPoint[0].position);
+    var tmp=containsSprite(listPoint[0].positionDown);
+    if(tmp === 1){
+        place="cuerpo";
+    }else if(tmp === 2){
+        place="cara";
+        answer=1;
+    }
+    var touch = {
+      "gesture": detectGesture(touchDuration),
+      "duration2": touchDuration,
+      "place": "t"+"-"+place,//Generalizacion test estimulo
+      "timeE": ( timePoint - time_inicial),
+      "answer": answer
+    };
+    listGestures.push(touch);
+    console.log("hi");
+    console.log(listGestures);
+}
+
+function update(){
+    if (this.game.input.activePointer.isDown){
+        if(listPoint.length<=0){
+            timePoint= new Date();
+            listPoint.push(this.game.input.activePointer);
+        }else{
+           listPoint.push(this.game.input.activePointer); 
+        }
+    }else if(listPoint.length>0){
+
+        pocessGesture();
+        listPoint=[];
+
+    }
+    //console.log("hi");
+    /*
+    var distance = Phaser.Point.distance(this.game.input.activePointer.position, this.game.input.activePointer.positionDown);
+    var duration = this.game.input.activePointer.duration;
+
+    updateSwipe(distance, duration);
+    updateTouch(distance, duration);
+    */
+}
+/*
+*/
 function listenerBack () {
 
     counterBack++;
