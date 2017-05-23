@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>List users</ion-title>
+    <button ion-button (click)="createUser($event)">
+      <ion-icon ios="ios-add" md="md-add"></ion-icon>
+    </button>
+    
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    
+    <div ion-item  *ngFor="let item of dataUser">
+      <button  (click)="itemTapped($event, item.id)">
+        {{item.name}} {{item.lastname}}
+        
+      </button>
+    </div>
+  </ion-list>
+</ion-content>
