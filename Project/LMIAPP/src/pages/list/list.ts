@@ -15,7 +15,7 @@ export class ListPage {
     id: string, 
     name: string,
     lastname: string,
-    birthday: Array<number>,
+    birthday: Date,
     test: Array<void>
     }>;
 
@@ -25,11 +25,7 @@ export class ListPage {
     this.data=dataExt;
     this.dataUser=dataExt.userData;
     // Let's populate this page with some filler content for funzies
-    
-
-    
-    
-    
+        
   }
 
   itemTapped(event, id) {

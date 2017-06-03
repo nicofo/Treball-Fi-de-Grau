@@ -14,6 +14,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public dataExt: DataProvider) {
   	this.textBoton="";
   	this.actualNumber=dataExt.actualUserIndex;
+    dataExt.actualTestId=0;
   	if(this.actualNumber=== -1){
   		this.textBoton="Not User Selected";
   	} else{
@@ -22,7 +23,7 @@ export class HomePage {
 
   }
   startTest() {
-    this.navCtrl.push(EstimulPage);
+    this.navCtrl.setRoot(EstimulPage);
   }
 
 }

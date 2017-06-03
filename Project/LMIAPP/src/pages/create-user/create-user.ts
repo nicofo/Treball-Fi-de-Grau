@@ -43,14 +43,14 @@ export class CreateUserPage {
     	name: this.user.name,
     	lastname: this.user.lastname,
     	//dia,mes,ano
-    	birthday:[bday.getDay(), bday.getMonth(), bday.getFullYear()],
+    	birthday:this.user.birthday,
     	test:[]
     });
     console.log(JSON.stringify({
     	id: id,
     	name: this.user.name,
     	lastname: this.user.lastname,
-    	birthday:[bday.getDay(), bday.getMonth(), bday.getFullYear()],
+    	birthday:this.user.birthday,
     	test:[]
     }));	
     this.navCtrl.pop();
