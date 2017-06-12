@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data/data';
-import { EstimulPage } from '../../pages/estimul/estimul';
+
+import { TestPage } from '../../pages/test/test';
 
 @Component({
   selector: 'page-home',
@@ -23,7 +24,7 @@ export class HomePage {
 
   }
   startTest() {
-    this.navCtrl.setRoot(EstimulPage);
+    this.navCtrl.setRoot(TestPage);
   }
 
 }

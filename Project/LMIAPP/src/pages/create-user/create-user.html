@@ -25,7 +25,8 @@
       </ion-item>
       <ion-item>
         <ion-label>Birthday</ion-label>
-        <ion-input type="date" [(ngModel)]="user.birthday" name="birthday"></ion-input>
+        <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="user.birthday" name="birthday">
+        </ion-datetime>
       </ion-item>
       <button ion-button type="submit" block>Add user</button>
     </form>

@@ -1,5 +1,5 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams , MenuController} from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { TestPage } from '../../pages/test/test';
@@ -24,14 +24,16 @@ export class EstimulPage {
 
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,  public dataExt: DataProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,  public dataExt: DataProvider, public menu: MenuController) {
   	this.data=dataExt;
     if (this.data.actualTestId === 0) {
         this.data.listGestures = [];
         this.data.startTest= new Date();
         this.data.countTouch=0;
+        this.data.countEstimulo=0;
         
     }
+    menu.swipeEnable(false, 'menu1');
     
   }
 
@@ -39,6 +41,9 @@ export class EstimulPage {
     
     this.PhaserGame();
     
+  }
+  preload(){
+
   }
 
   PhaserGame(){
@@ -51,7 +56,6 @@ export class EstimulPage {
         SWIPE: 250
     };
     let phaserElement = this.phaserElement.nativeElement;
-    let bmdRef, bmdImg;
   	let MainGame = {
 
   		preload:()=>{
@@ -66,10 +70,12 @@ export class EstimulPage {
         //  This creates a simple sprite that is using our loaded image and
         //  displays it on-screen and assign it to a variable
         phaser.stage.backgroundColor = '#ffffff'
+        console.log("rrrrrr!!");
         phaser.bmdRef = phaser.make.bitmapData(phaser.height*2, phaser.height);
         phaser.bmdRef.draw('reference', (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
         phaser.bmdRef.update();
         phaser.bmdRef.addToWorld();
+        console.log("ererwe");
         phaser.bmdImg = phaser.make.bitmapData(phaser.height*2, phaser.height);
         phaser.bmdImg.draw('image', (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
         phaser.bmdImg.update();
@@ -129,6 +135,7 @@ export class EstimulPage {
         };
         this.data.listGestures.push(touch);
         this.data.countTouch++;
+        this.data.countEstimulo++;
         console.log(place+ " "+touch.gesture);
       },
       update:()=>{
@@ -149,14 +156,18 @@ export class EstimulPage {
       }
 
   	};
-
-    let phaser = new Phaser.Game(phaserElement.offsetWidth,phaserElement.offsetHeight,Phaser.AUTO,phaserElement);
+    console.log("Hey IT");
+    let phaser = new Phaser.Game(phaserElement.offsetWidth,phaserElement.offsetHeight,Phaser.CANVAS,phaserElement);
+    console.log("Hey IT2");
     phaser.state.add('MainGame',MainGame);
+    console.log("Hey IT3");
     phaser.state.start('MainGame');
+    console.log("Hey IT4");
     setTimeout(()=>{
         listPoint = [];
+        
+        //this.navCtrl.setRoot(TestPage);
         phaser.destroy();
-        this.navCtrl.setRoot(TestPage);
         console.log("BYE");
     },this.data.timeEstimul);
 

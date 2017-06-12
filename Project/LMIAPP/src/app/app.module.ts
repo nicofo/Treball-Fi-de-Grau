@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { File } from '@ionic-native/file';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -40,6 +42,8 @@ import { DataProvider } from '../providers/data/data';
   ],
   providers: [
     StatusBar,
+    File,
+    EmailComposer,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DataProvider

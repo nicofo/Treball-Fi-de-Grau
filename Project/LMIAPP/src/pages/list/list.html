@@ -3,10 +3,11 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
+    &nbsp;
     <ion-title>List users</ion-title>
-    <button ion-button (click)="createUser($event)">
-      <ion-icon ios="ios-add" md="md-add"></ion-icon>
-    </button>
+    
+      <button  (click)="createUser($event)"><ion-icon ios="ios-add-circle" md="md-add-circle"  style="zoom:3.0;"></ion-icon></button>
+    
     
   </ion-navbar>
 </ion-header>
@@ -15,10 +16,19 @@
   <ion-list>
     
     <div ion-item  *ngFor="let item of dataUser">
-      <button  (click)="itemTapped($event, item.id)">
+      <button  (click)="itemTapped($event, item.id)" style="zoom:2.0;">
         {{item.name}} {{item.lastname}}
         
       </button>
+      <div side="primary">
+        &nbsp; &nbsp;
+        <button  (click)="itemTapped($event, item.id)"><ion-icon ios="ios-checkmark-circle" md="md-checkmark-circle" style="zoom:3.0;"></ion-icon></button>
+        &nbsp; &nbsp;
+        <button  (click)="removeConfirm($event, item.id)"><ion-icon ios="ios-trash" md="md-trash"  style="zoom:3.0;"></ion-icon></button>
+        &nbsp; &nbsp;
+        <button  (click)="onSendUser($event, item.id)"><ion-icon ios="ios-mail" md="md-mail"  style="zoom:3.0;"></ion-icon></button>
+        
+      </div>
     </div>
   </ion-list>
 </ion-content>

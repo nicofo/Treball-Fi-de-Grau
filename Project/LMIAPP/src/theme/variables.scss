@@ -76,3 +76,12 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+page-list {
+	ion-list{
+	  font-size: 200px;
+	}
+	list{
+	  font-size: 200px;
+	}
+}

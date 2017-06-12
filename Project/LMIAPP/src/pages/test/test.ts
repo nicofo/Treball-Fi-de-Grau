@@ -1,5 +1,5 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, MenuController } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { EstimulPage } from '../../pages/estimul/estimul';
@@ -24,14 +24,14 @@ export class TestPage {
   //private phaser: Phaser;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,  public dataExt: DataProvider, public appCtrl: App	) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,  public dataExt: DataProvider, public appCtrl: App, public menu: MenuController) {
   	this.data=dataExt;
   	console.log("Hi there");
   	if (this.data.actualTestId === 0) {
         this.data.correctAnswers = 0;
         this.data.correctAnswersAll= 0;
     }
-       
+       menu.swipeEnable(false, 'menu1');
   }
 
   ionViewDidLoad() {
@@ -39,69 +39,138 @@ export class TestPage {
     this.PhaserGame();
     
   }
+  
+
 
   PhaserGame(){
     let time_inicial = new Date();
     let listPoint = [];
     let timePoint = new Date();
     let answered= false;
+    let estimulView= true;
     let endTestTimeout;
-    endTestTimeout = setTimeout(function () {
-        //pocessGesture();
-        MainGame.endLevel();
-    }, this.data.timeTest);
     let TIMES = {
         HOLD: 150,
         SWIPE: 250
     };
     let phaserElement = this.phaserElement.nativeElement;
-    let bmdRef, bmdImg;
   	let MainGame = {
   		endLevel:()=> {
   			listPoint = [];
+          if (this.data.actualTestId === 0) {
+            this.data.correctAnswers  = 0;
+          }
 	        if ((this.data.actualTestId % 4 === 0) && (this.data.actualTestId != 0)) {
 	            if (this.data.actualTestId === 16) {
-	            	this.appCtrl.getRootNav().setRoot(EndTestPage);
+	            	  this.navCtrl.setRoot(EndTestPage);
+
 	                //$state.go('app.endTest', { testId: (parseInt($stateParams.testId)), correct: (parseInt(0)) });
 	            } else if (this.data.correctAnswers  > 0) {
 	                this.data.correctAnswers  = 0;
 	                this.data.actualTestId++;
-	                this.appCtrl.getRootNav().setRoot(EstimulPage);
-	                //$state.go('app.pagea', { testId: (parseInt($stateParams.testId) + 1) });
+	                MainGame.recreateEstimul();
 	            } else {
-	            	this.appCtrl.getRootNav().setRoot(EndTestPage);
-	                //$state.go('app.endTest', { testId: (parseInt($stateParams.testId)), correct: (parseInt(-1)) });
+	            	this.navCtrl.setRoot(EndTestPage);
 	            }
 	        } else {
 	            this.data.actualTestId++;
-	            this.appCtrl.getRootNav().setRoot(EstimulPage);
+	            MainGame.recreateEstimul();
 	        }
 	    },
   		preload:()=>{
-        	console.log(this.data.testImages[this.data.actualTestId]["testRef"]);
-        	console.log(this.data.testImages[this.data.actualTestId]["testImg"]);
-  			phaser.load.image('reference', 'assets/img/' + this.data.testImages[this.data.actualTestId]["testRef"]);
-        	phaser.load.image('image', 'assets/img/' + this.data.testImages[this.data.actualTestId]["testImg"]);
+        	let i =0;
+          for (let elem of this.data.testImages) {
+            phaser.load.image('testRef'+i, 'assets/img/' + elem["testRef"]);
+            phaser.load.image('testImg'+i, 'assets/img/' + elem["testImg"]);
+            phaser.load.image('estimRef'+i, 'assets/img/' + elem["estimRef"]);
+            phaser.load.image('estimImg'+i, 'assets/img/' + elem["estimImg"]);
+            console.log('estimRef'+i);
+            i++;
+          }
 
   		},
   		create:()=>{
 
-        //  This creates a simple sprite that is using our loaded image and
-        //  displays it on-screen and assign it to a variable
-        phaser.stage.backgroundColor = '#ffffff'
+        phaser.stage.backgroundColor = '#ffffff';
+        this.data.listGestures = [];
+        this.data.startTest= new Date();
+        this.data.countTouch=0;
+        this.data.countEstimulo=0;
+        //faceimage.input.pixelPerfectClick = true;
         phaser.bmdRef = phaser.make.bitmapData(phaser.width, phaser.height);
-        phaser.bmdRef.draw('reference', 0, 0, phaser.width, phaser.height);
+        phaser.bmdRef.draw('estimRef'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+        phaser.bmdRef.update();
+        phaser.bmdRef.addToWorld();
+        console.log("ererwe");
+        phaser.bmdImg = phaser.make.bitmapData(phaser.width, phaser.height);
+        phaser.bmdImg.draw('estimImg'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+        phaser.bmdImg.update();
+        phaser.bmdImg.addToWorld();
+        time_inicial = new Date();
+        listPoint = [];
+        timePoint = new Date();
+        answered= false;
+        estimulView= true;
+        endTestTimeout = setTimeout(function () {
+            //pocessGesture();
+            MainGame.loadTest();
+        }, this.data.timeEstimul);
+        console.log('estimRef'+this.data.actualTestId);
+        console.log('estimImg'+this.data.actualTestId);
+        
+
+
+      },
+      recreateEstimul:()=>{
+
+        phaser.stage.backgroundColor = '#ffffff';
+        phaser.bmdRef.clear();
+        phaser.bmdImg.clear();
+        phaser.bmdRef.draw('estimRef'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+        phaser.bmdRef.update();
+        phaser.bmdRef.addToWorld();
+        console.log("ererwe");
+        phaser.bmdImg.draw('estimImg'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+        phaser.bmdImg.update();
+        phaser.bmdImg.addToWorld();
+        time_inicial = new Date();
+        listPoint = [];
+        timePoint = new Date();
+        answered= false;
+        estimulView= true;
+        endTestTimeout = setTimeout(function () {
+            //pocessGesture();
+            MainGame.loadTest();
+        }, this.data.timeEstimul);
+        console.log('estimRef'+this.data.actualTestId);
+        console.log('estimImg'+this.data.actualTestId);
+
+
+      },
+      loadTest:()=>{
+
+        phaser.stage.backgroundColor = '#ffffff';
+        phaser.bmdRef.clear();
+        phaser.bmdImg.clear();
+        
+        phaser.bmdRef.draw('testRef'+this.data.actualTestId, 0, 0, phaser.width, phaser.height);
         phaser.bmdRef.update();
         phaser.bmdRef.addToWorld();
         phaser.bmdImg = phaser.make.bitmapData(phaser.width, phaser.height);
-        phaser.bmdImg.draw('image', 0, 0, phaser.width, phaser.height);
+        phaser.bmdImg.draw('testImg'+this.data.actualTestId, 0, 0, phaser.width, phaser.height);
         phaser.bmdImg.update();
         phaser.bmdImg.addToWorld();
-        
-        //faceimage.input.pixelPerfectClick = true;
-
-        //text = phaser.add.text(250, 16, '', { fill: '#00ff00' });
-
+        time_inicial = new Date();
+        listPoint = [];
+        timePoint = new Date();
+        answered= false;
+        estimulView= false;
+        endTestTimeout = setTimeout(function () {
+            //pocessGesture();
+            MainGame.endLevel();
+        }, this.data.timeTest);
+        console.log('testRef'+this.data.actualTestId);
+        console.log('testRef'+this.data.actualTestId);
 
 
       },
@@ -151,27 +220,44 @@ export class TestPage {
         let tmp = MainGame.containsSprite(listPoint[0].positionDown);
         let answer = "0";
         if (tmp === 2) {
+          if(!estimulView){
             place = "cuerpo";
+          }else{
+            place = "ojos";
+          }
         } else if (tmp === 1) {
         	place = "cara";
-        	if(!answered){
-	            
+        	if((!answered) && (!estimulView)){
 	            answer = "1";
 	            MainGame.listenerFace();
 	            this.data.correctAnswers++;
-        		this.data.correctAnswersAll++;
-        		answered=true;
-            }
+          		this.data.correctAnswersAll++;
+          		answered=true;
+          }
         }
-        var touch = {
+        let touch;
+        if(!estimulView){
+          touch = {
+              "idLevel": this.data.actualTestId ,
+              "idTouch":this.data.countTouch, 
+              "gesture": MainGame.detectGesture(touchDuration),
+              "duration": touchDuration,
+              "place": "t" + "-" + place,//Generalizacion test 
+              "timeE": (this.data.timeEstimul + (timePoint.getTime() - time_inicial.getTime())),
+              "answer": answer
+          };
+        }else{
+        this.data.countEstimulo++;
+          touch = {
             "idLevel": this.data.actualTestId ,
-            "idTouch":this.data.countTouch, 
+            "idTouch": this.data.countTouch,
             "gesture": MainGame.detectGesture(touchDuration),
             "duration": touchDuration,
-            "place": "t" + "-" + place,//Generalizacion test estimulo
-            "timeE": (this.data.timeEstimul + (timePoint.getTime() - time_inicial.getTime())),
-            "answer": answer
+            "place": "e" + "-" + place,//Generalizacion estimulo
+            "timeE": (timePoint.getTime() - time_inicial.getTime()),
+            "answer": 'na'
         };
+        }
         this.data.listGestures.push(touch);
         this.data.countTouch++;
         console.log(place+ " "+touch.gesture);
@@ -195,7 +281,7 @@ export class TestPage {
 
   	};
   	
-    let phaser = new Phaser.Game(phaserElement.offsetWidth,phaserElement.offsetHeight,Phaser.AUTO,phaserElement);
+    let phaser = new Phaser.Game(phaserElement.offsetWidth,phaserElement.offsetHeight,Phaser.CANVAS,phaserElement);
     phaser.state.add('MainGame',MainGame);
     phaser.state.start('MainGame');
 

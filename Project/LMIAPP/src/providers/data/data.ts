@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable} from '@angular/core';
+import { ToastController } from 'ionic-angular';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+
+import { File } from '@ionic-native/file';
 
 /*
   Generated class for the DataProvider provider.
@@ -12,12 +15,13 @@ import 'rxjs/add/operator/map';
 export class DataProvider {
 
   public userData:Array<{
-  	id: string, 
-  	name: string,
-  	lastname: string,
-  	birthday: Date,
-  	test: Array<void>
-  	}>= [];
+    id: string, 
+    name: string,
+    lastname: string,
+    birthday: Date,
+    tests: Array<string>,
+    results: string
+    }>= [];
 
   public testImages: Array<{
       "estimRef": string,
@@ -39,13 +43,14 @@ export class DataProvider {
       "answer": string
   }>= [];
   public startTest: Date;
-  public timeEstimul:number=10000;
-  public timeTest:number=10000;
-  public timeTestPostClick:number=2000;
+  public timeEstimul:number=3000;
+  public timeTest:number=3000;
+  public timeTestPostClick:number=1000;
   public correctAnswers=0;
   public correctAnswersAll=0;
   public countTouch=0;
-  constructor(){
+  public countEstimulo=0;
+  constructor( private file: File, private toastCtrl: ToastController){
     this.testImages = [
       {
           "estimRef": "01A_GT.png",
@@ -144,6 +149,41 @@ export class DataProvider {
           "testImg": "01B.jpg"
       }
     ];
+    this.file.readAsText(this.file.documentsDirectory, "lmiUsers.json").then(fileStr => {
+      console.log(fileStr);
+      this.userData=  JSON.parse(fileStr);
+      console.log(this.userData);
+      let toast = this.toastCtrl.create({
+        message: 'Load saved info',
+        duration: 3000,
+        position: 'top'
+      });
+
+      toast.onDidDismiss(() => {
+        console.log('Dismissed toast');
+      });
+
+      toast.present();
+      
+    }).catch(err => {
+      let toast = this.toastCtrl.create({
+        message: 'No saved',
+        duration: 3000,
+        position: 'top'
+      });
+
+      toast.onDidDismiss(() => {
+        console.log('Dismissed toast');
+      });
+
+      toast.present();
+    });
+
+  }
+  saveUsers(){
+    this.file.writeFile(this.file.documentsDirectory,"lmiUsers.json",JSON.stringify(this.userData));
+    
+
   }
 
 }
