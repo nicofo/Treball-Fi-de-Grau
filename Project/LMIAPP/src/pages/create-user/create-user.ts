@@ -47,17 +47,17 @@ export class CreateUserPage {
     	name: this.user.name,
     	lastname: this.user.lastname,
     	//dia,mes,ano
-    	birthday:bday,
+    	birthday:bday.toISOString(),
     	tests:emptyArrayStr,
       results:"ID;n meses edad;ID prueba;Quien;Inicio;Fin;Duracion;D. Media;DS D.;P;PC;E;T. Test;T. Ojos;T. Cara;T. Otro; T. Repetidos;Tiempo Primer T;Tiempo medio;Tap;Press;Stroke"
     });
-      let filename=id+".csv";
-      this.file.writeFile(this.file.documentsDirectory,filename,"ID;n meses edad;ID prueba;Quien;Inicio;Fin;Duracion;D. Media;DS D.;P;PC;E;T. Test;T. Ojos;T. Cara;T. Otro; T. Repetidos;Tiempo Primer T;Tiempo medio;Tap;Press;Stroke");
+      let filename=id;
+      this.data.saveUsers();
     console.log(JSON.stringify({
     	id: id,
     	name: this.user.name,
     	lastname: this.user.lastname,
-    	birthday:this.user.birthday,
+    	birthday:this.user.birthday.toISOString(),
     	test:[]
     }));	
     this.navCtrl.pop();

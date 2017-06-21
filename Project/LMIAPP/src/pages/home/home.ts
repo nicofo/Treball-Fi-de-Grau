@@ -24,7 +24,10 @@ export class HomePage {
 
   }
   startTest() {
-    this.navCtrl.setRoot(TestPage);
+  if(this.actualNumber!= -1){
+      this.navCtrl.setRoot(TestPage);
+    }
+    
   }
 
 }

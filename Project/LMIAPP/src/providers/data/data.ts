@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 import { File } from '@ionic-native/file';
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the DataProvider provider.
@@ -18,7 +19,7 @@ export class DataProvider {
     id: string, 
     name: string,
     lastname: string,
-    birthday: Date,
+    birthday: string,
     tests: Array<string>,
     results: string
     }>= [];
@@ -50,8 +51,14 @@ export class DataProvider {
   public correctAnswersAll=0;
   public countTouch=0;
   public countEstimulo=0;
-  constructor( private file: File, private toastCtrl: ToastController){
+  constructor( private file: File, private toastCtrl: ToastController, private storage: Storage){
     this.testImages = [
+      {
+          "estimRef": "00A_GT.png",
+          "estimImg": "00A.jpg",
+          "testRef": "00B_GT.png",
+          "testImg": "00B.jpg"
+      },
       {
           "estimRef": "01A_GT.png",
           "estimImg": "01A.jpg",
@@ -143,47 +150,43 @@ export class DataProvider {
           "testImg": "15B.jpg"
       },
       {
-          "estimRef": "01A_GT.jpg",
-          "estimImg": "01A.jpg",
-          "testRef": "01B_GT.jpg",
-          "testImg": "01B.jpg"
+          "estimRef": "16_GT.jpg",
+          "estimImg": "16A.jpg",
+          "testRef": "16B_GT.jpg",
+          "testImg": "16B.jpg"
       }
     ];
-    this.file.readAsText(this.file.documentsDirectory, "lmiUsers.json").then(fileStr => {
-      console.log(fileStr);
-      this.userData=  JSON.parse(fileStr);
+
+    this.userData=[];
+    this.storage.get('users').then((val) => {
+      this.userData=  JSON.parse(val);
       console.log(this.userData);
-      let toast = this.toastCtrl.create({
-        message: 'Load saved info',
-        duration: 3000,
-        position: 'top'
-      });
-
-      toast.onDidDismiss(() => {
-        console.log('Dismissed toast');
-      });
-
-      toast.present();
+      if(this.userData==null){
+        this.userData=[];
+      }
       
-    }).catch(err => {
-      let toast = this.toastCtrl.create({
-        message: 'No saved',
-        duration: 3000,
-        position: 'top'
-      });
-
-      toast.onDidDismiss(() => {
-        console.log('Dismissed toast');
-      });
-
-      toast.present();
     });
+    
 
   }
   saveUsers(){
-    this.file.writeFile(this.file.documentsDirectory,"lmiUsers.json",JSON.stringify(this.userData));
+    this.storage.set('users', JSON.stringify(this.userData));
+    //this.file.writeFile(this.file.documentsDirectory,"lmiUsers.json",JSON.stringify(this.userData));
     
 
+  }
+  saveData(name, data){
+    this.storage.set(name, data);
+    //this.file.writeFile(this.file.documentsDirectory,"lmiUsers.json",JSON.stringify(this.userData));
+    
+
+  }
+  loadData(name){
+    let loadFile;
+    this.storage.get(name).then((val) => {
+      loadFile=  val;
+    })
+    return loadFile;
   }
 
 }

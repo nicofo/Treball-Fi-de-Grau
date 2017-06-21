@@ -6,6 +6,7 @@ import { EstimulPage } from '../../pages/estimul/estimul';
 import { EndTestPage } from '../../pages/end-test/end-test';
 
 declare var Phaser;
+declare const math: any;
 /**
  * Generated class for the TestPage page.
  *
@@ -31,7 +32,7 @@ export class TestPage {
         this.data.correctAnswers = 0;
         this.data.correctAnswersAll= 0;
     }
-       menu.swipeEnable(false, 'menu1');
+    this.menu.swipeEnable(false);
   }
 
   ionViewDidLoad() {
@@ -77,6 +78,10 @@ export class TestPage {
 	            MainGame.recreateEstimul();
 	        }
 	    },
+      dot:(d1,d2)=>{
+          return d1[0]*d2[0] + d1[1]*d2[1];
+
+      },
   		preload:()=>{
         	let i =0;
           for (let elem of this.data.testImages) {
@@ -126,11 +131,16 @@ export class TestPage {
         phaser.stage.backgroundColor = '#ffffff';
         phaser.bmdRef.clear();
         phaser.bmdImg.clear();
-        phaser.bmdRef.draw('estimRef'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+        if(this.data.actualTestId>=15){
+          phaser.bmdRef.draw('estimRef'+this.data.actualTestId, (phaser.width-928 * 1.1)/2, (phaser.height-400*1.1)/2, 928 * 1.1, 400*1.1);
+          phaser.bmdImg.draw('estimImg'+this.data.actualTestId, (phaser.width-928 * 1.1)/2, (phaser.height-400*1.1)/2, 928 * 1.1, 400*1.1);
+        }else{
+          phaser.bmdRef.draw('estimRef'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+          phaser.bmdImg.draw('estimImg'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
+        }
         phaser.bmdRef.update();
         phaser.bmdRef.addToWorld();
         console.log("ererwe");
-        phaser.bmdImg.draw('estimImg'+this.data.actualTestId, (phaser.width-phaser.height)/2, 0, phaser.height, phaser.height);
         phaser.bmdImg.update();
         phaser.bmdImg.addToWorld();
         time_inicial = new Date();
@@ -207,11 +217,19 @@ export class TestPage {
                 return "Tap";
             }
         }
-        /*if(){
-    
-        }if(){
-    
-        }*/
+        let last= listPoint.length - 1;
+        let distCen=MainGame.dot([listPoint[last].position.x - listPoint[0].position.x, listPoint[last].position.y - listPoint[0].position.y ], [listPoint[Math.trunc(last/2)].position.x - listPoint[0].position.x, listPoint[Math.trunc(last/2)].position.y - listPoint[0].position.y ]);
+
+        let dist1quart=MainGame.dot([listPoint[last].position.x - listPoint[0].position.x, listPoint[last].position.y - listPoint[0].position.y ], [listPoint[Math.trunc(last/4)].position.x - listPoint[0].position.x, listPoint[Math.trunc(last/4)].position.y - listPoint[0].position.y ]);
+
+        let dist3quart=MainGame.dot([listPoint[last].position.x - listPoint[0].position.x, listPoint[last].position.y - listPoint[0].position.y ], [listPoint[Math.trunc(3*last/4)].position.x - listPoint[0].position.x, listPoint[Math.trunc(3*last/4)].position.y - listPoint[0].position.y ]);
+        console.log("distancias "+(listPoint[last].position.x - listPoint[0].position.x)+" "+( listPoint[last].position.y - listPoint[0].position.y )+"  "+(listPoint[Math.trunc(last/2)].position.x - listPoint[0].position.x)+" "+ (listPoint[Math.trunc(last/2)].position.y - listPoint[0].position.y) +"  "+dist3quart);
+        if(Math.abs(distCen)>20 || Math.abs(dist1quart)>20 || Math.abs(dist3quart)>20){
+            if(((distCen>0)&&((dist1quart<0)||(dist3quart<0))) ||((dist1quart>0)&&((distCen<0)||(dist3quart<0))) || ((dist3quart>0)&&((dist1quart<0)||(distCen<0))) ){
+              return "Otro";
+            }
+            return "Curve";   
+        }
         return "Stroke";
       },
       pocessGesture:()=>{
@@ -234,6 +252,7 @@ export class TestPage {
           		this.data.correctAnswersAll++;
           		answered=true;
           }
+          answer = "1";
         }
         let touch;
         if(!estimulView){
@@ -247,7 +266,7 @@ export class TestPage {
               "answer": answer
           };
         }else{
-        this.data.countEstimulo++;
+        this.data.countEstimulo++;  
           touch = {
             "idLevel": this.data.actualTestId ,
             "idTouch": this.data.countTouch,

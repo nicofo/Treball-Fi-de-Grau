@@ -5,6 +5,7 @@ import { AlertController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data/data';
 import { File } from '@ionic-native/file';
 
+
 import { HomePage } from '../../pages/home/home';
 
 /**
@@ -33,7 +34,7 @@ export class EndTestPage {
   	id: string, 
   	name: string,
   	lastname: string,
-  	birthday: Date,
+  	birthday: string,
   	tests: Array<String>,
   	results: String
   	};
@@ -61,15 +62,22 @@ export class EndTestPage {
       console.log('HI');
   		let len=this.listGestures.length;
       console.log('len'+len);
-  		let mesesEdad= this.monthDiff(this.user.birthday, this.data.startTest);
+      console.log(new Date());
+  		let mesesEdad= this.monthDiff(new Date(this.user.birthday), this.data.startTest);
+      console.log('HI');
       console.log('mesesEdad '+mesesEdad);
   		let today=this.data.startTest.getDate()+"-"+(this.data.startTest.getMonth()+1)+"-"+this.data.startTest.getFullYear()+" "+this.data.startTest.getHours()+":"+this.data.startTest.getMinutes();
+      console.log('HI');
       console.log('today'+today);
+      console.log('today'+today);
+      console.log('today'+this.data.startTest.getTime());
+      console.log('HI');
   		let tiempo= Math.trunc((this.endDate.getTime() -this.data.startTest.getTime())/1000);
+      console.log('HI');
       console.log('tiempo'+tiempo);
   		let tiempoMedio=tiempo/(this.data.actualTestId+1);
       console.log('HI');
-  		let dades="ID; N. meses edad; Dia prueba; ID prueba;Quien;Gesto;Nivel;Secuencia touch;Duracion touch;Tiempo desde estimulo; Respuesta";
+  		let dades="ID; N. meses edad; Dia prueba; ID prueba;Quien;Gesto;Nivel;Secuencia touch;Duracion touch;Zona touchTiempo desde estimulo; Respuesta";
   		let actualTest=0;
   		let timeTest=this.data.timeEstimul+this.data.timeTest;
   		let sumDes=0;
@@ -120,9 +128,9 @@ export class EndTestPage {
   		sumDes=timeTest-tiempoMedio;
 
 
-  		let filename=this.user.id+"_"+this.data.startTest.getDate()+"-"+(this.data.startTest.getMonth()+1)+"-"+this.data.startTest.getFullYear()+".csv";
-  		this.file.writeFile(this.file.documentsDirectory,filename,dades);
-      console.log('guardar gesture');
+  		let filename=this.user.id+"_"+this.data.startTest.getDate()+"-"+(this.data.startTest.getMonth()+1)+"-"+this.data.startTest.getFullYear();
+      //this.data.saveData(filename, dades);
+      this.file.writeFile(this.file.documentsDirectory,filename+".csv",dades);
   		this.data.userData[this.data.actualUserIndex].tests.push(filename);
   		this.listGestures=[];
   		dades="";
@@ -133,18 +141,18 @@ export class EndTestPage {
   		let  min= Math.trunc(tiempo/60);
 
   		this.data.userData[this.data.actualUserIndex].results+="\n"+this.user.id+ ";"+mesesEdad+";"+"recaras"+";"+"nom"+";"+today+";"+later+";"+min+":"+(tiempo - min*60)+";"+tiempoMedio+";"+(Math.sqrt(sumDes/this.data.actualTestId))+";"+this.data.correctAnswersAll+";"+this.puntuacion(mesesEdad)+";"+((len-this.data.countEstimulo- sumTCara)/(this.data.actualTestId + 1))+";"+((len-this.data.countEstimulo)/(this.data.actualTestId + 1))+";"+(sumTOjos*100/this.data.countEstimulo)+";"+(sumTCara/(len-this.data.countEstimulo))+";"+(sumTOtro/len)+";"+estPrimero+";"+(estSum/(this.data.actualTestId + 1))+";"+(sumTap*100/len)+";"+(sumPress*100/len)+";"+(sumStroke*100/len);
-      filename=this.user.id+".csv";
+      filename=this.user.id;
       console.log(this.data.userData[this.data.actualUserIndex].results);
-      this.file.writeFile(this.file.documentsDirectory,filename,this.data.userData[this.data.actualUserIndex].results);
-      console.log('guardar esta '+this.file.documentsDirectory+filename);
+      //this.data.saveData(filename, this.data.userData[this.data.actualUserIndex].results);
+      this.file.writeFile(this.file.documentsDirectory,filename+".csv",this.data.userData[this.data.actualUserIndex].results);
       this.data.saveUsers();
       console.log('guardar gesture');
       this.navCtrl.setRoot(HomePage);
   }
   dontSave(event){
     let alert = this.alertCtrl.create({
-      title: 'Confirm purchase',
-      message: 'Do you want to buy this book?',
+      title: 'Confirm quit',
+      message: 'Do you want to quit?',
       buttons: [
         {
           text: 'Cancel',
@@ -154,7 +162,7 @@ export class EndTestPage {
           }
         },
         {
-          text: 'Buy',
+          text: "Don't save",
           handler: () => {
             this.listGestures=[];
             this.navCtrl.setRoot(HomePage);

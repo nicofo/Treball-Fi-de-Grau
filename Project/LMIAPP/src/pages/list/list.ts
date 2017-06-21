@@ -18,7 +18,7 @@ export class ListPage {
     id: string, 
     name: string,
     lastname: string,
-    birthday: Date,
+    birthday: string,
     tests: Array<String>,
     results: String
     }>;
@@ -102,25 +102,33 @@ export class ListPage {
     console.log("Hi inicial path "+ this.file.documentsDirectory);
     console.log("Hi inicial path "+ this.data.userData[index].id);
     var filesPaths:string[]; 
+    //this.file.writeFile(this.file.documentsDirectory,this.data.userData[index].id+".csv",this.data.userData[index].results);
     filesPaths=[this.file.documentsDirectory+this.data.userData[index].id+".csv"];
     console.log("Hi inicial path "+ filesPaths);
+    console.log("Hi inicial tests "+ this.data.userData[index].tests.length);
     for( var i=0; i<this.data.userData[index].tests.length; i++){
-      filesPaths.push(this.file.documentsDirectory+this.data.userData[index].tests[i]+"");
+      console.log(this.data.userData[index].tests[i]);
+      let filetosave=this.data.loadData(this.data.userData[index].tests[i]);
+      console.log("Hi post filetosave "+ filetosave);
+      //this.file.writeFile(this.file.documentsDirectory,this.data.userData[index].tests[i]+".csv",filetosave);
+      console.log("Hi post csv "+ this.data.userData[index].tests[i]+".csv");
+      filesPaths.push(this.file.documentsDirectory+this.data.userData[index].tests[i]+".csv");
     }
-    console.log("Hi post path "+ filesPaths);
-    let text="Tables "+this.data.userData[index].name+" "+this.data.userData[index].lastname;
-    let email = {
-      to: null,
-      cc: null,
-      bcc: null,
-      attachments: filesPaths,
-      subject: text,
-      body: text,
-      isHtml: true
-    };
-    console.log("Hi email "+ email);
-    // Send a text message using default options
-    this.emailComposer.open(email);
-    console.log("Hi open? ");
+      console.log("Hi post path "+ filesPaths);
+      let text="Tables "+this.data.userData[index].name+" "+this.data.userData[index].lastname;
+      let email = {
+        to: null,
+        cc: null,
+        bcc: null,
+        attachments: filesPaths,
+        subject: text,
+        body: text,
+        isHtml: true
+      };
+      console.log("Hi email "+ email);
+      // Send a text message using default options
+      this.emailComposer.open(email);
+      console.log("Hi open? ");
+
   }
 }
