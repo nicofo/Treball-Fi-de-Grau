@@ -77,7 +77,7 @@ export class EndTestPage {
       console.log('tiempo'+tiempo);
   		let tiempoMedio=tiempo/(this.data.actualTestId+1);
       console.log('HI');
-  		let dades="ID; N. meses edad; Dia prueba; ID prueba;Quien;Gesto;Nivel;Secuencia touch;Duracion touch;Zona touchTiempo desde estimulo; Respuesta";
+  		let dades="ID; N. meses edad; Dia prueba; ID prueba;Quien;Gesto;Nivel;Secuencia touch;Duracion touch;Zona touch;Tiempo desde estimulo; Respuesta";
   		let actualTest=0;
   		let timeTest=this.data.timeEstimul+this.data.timeTest;
   		let sumDes=0;
@@ -93,7 +93,7 @@ export class EndTestPage {
   		for (let elem of this.listGestures) {
 
 
-  			dades+="\n"+this.user.id+";"+mesesEdad+";"+today+";"+"recaras"+";"+"nom"+";"+elem.gesture+";"+elem.idLevel+";"+elem.idTouch+";"+elem.duration+";"+elem.place+";"+elem.timeE+";"+elem.answer;
+  			dades+="\n"+this.user.id+";"+mesesEdad+";"+today+";"+"recaras"+";"+this.data.examinator+";"+elem.gesture+";"+elem.idLevel+";"+elem.idTouch+";"+elem.duration+";"+elem.place+";"+elem.timeE+";"+elem.answer;
   			if(elem.answer === "0"){
   				timeTest=elem.timeE;
   			}
@@ -140,7 +140,7 @@ export class EndTestPage {
   		let later=this.endDate.getDate()+"-"+(this.endDate.getMonth()+1)+"-"+this.endDate.getFullYear()+" "+this.endDate.getHours()+":"+this.endDate.getMinutes();
   		let  min= Math.trunc(tiempo/60);
 
-  		this.data.userData[this.data.actualUserIndex].results+="\n"+this.user.id+ ";"+mesesEdad+";"+"recaras"+";"+"nom"+";"+today+";"+later+";"+min+":"+(tiempo - min*60)+";"+tiempoMedio+";"+(Math.sqrt(sumDes/this.data.actualTestId))+";"+this.data.correctAnswersAll+";"+this.puntuacion(mesesEdad)+";"+((len-this.data.countEstimulo- sumTCara)/(this.data.actualTestId + 1))+";"+((len-this.data.countEstimulo)/(this.data.actualTestId + 1))+";"+(sumTOjos*100/this.data.countEstimulo)+";"+(sumTCara/(len-this.data.countEstimulo))+";"+(sumTOtro/len)+";"+estPrimero+";"+(estSum/(this.data.actualTestId + 1))+";"+(sumTap*100/len)+";"+(sumPress*100/len)+";"+(sumStroke*100/len);
+  		this.data.userData[this.data.actualUserIndex].results+="\n"+this.user.id+ ";"+mesesEdad+";"+"recaras"+";"+this.data.examinator+";"+today+";"+later+";"+min+":"+(tiempo - min*60)+";"+tiempoMedio+";"+(Math.sqrt(sumDes/this.data.actualTestId))+";"+this.data.correctAnswersAll+";"+this.puntuacion(mesesEdad)+";"+((len-this.data.countEstimulo- sumTCara)/(this.data.actualTestId + 1))+";"+((len-this.data.countEstimulo)/(this.data.actualTestId + 1))+";"+(sumTOjos*100/this.data.countEstimulo)+";"+(sumTCara/(len-this.data.countEstimulo))+";"+(sumTOtro/len)+";"+estPrimero+";"+(estSum/(this.data.actualTestId + 1))+";"+(sumTap*100/len)+";"+(sumPress*100/len)+";"+(sumStroke*100/len);
       filename=this.user.id;
       console.log(this.data.userData[this.data.actualUserIndex].results);
       //this.data.saveData(filename, this.data.userData[this.data.actualUserIndex].results);

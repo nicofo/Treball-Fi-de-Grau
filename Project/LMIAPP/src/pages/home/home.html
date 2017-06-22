@@ -3,12 +3,11 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>{{textBoton}}		</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   
-
-  <button ion-button secondary (click)="startTest($event)">{{textBoton}}</button>
+<ion-img style="height: 80%;margin-left: 15%" src="assets/img/button.png"(click)="startTest($event)"></ion-img>
 </ion-content>

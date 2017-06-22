@@ -13,6 +13,7 @@ import { CreateUserPage } from '../pages/create-user/create-user';
 import { EstimulPage } from '../pages/estimul/estimul';
 import { TestPage } from '../pages/test/test';
 import { EndTestPage } from '../pages/end-test/end-test';
+import { ConfigPage } from '../pages/config/config';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,7 +27,8 @@ import { DataProvider } from '../providers/data/data';
     CreateUserPage,
     EstimulPage,
     TestPage,
-    EndTestPage
+    EndTestPage,
+    ConfigPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { DataProvider } from '../providers/data/data';
     CreateUserPage,
     EstimulPage,
     TestPage,
-    EndTestPage
+    EndTestPage,
+    ConfigPage
   ],
   providers: [
     StatusBar,

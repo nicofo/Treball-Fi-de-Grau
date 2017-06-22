@@ -44,6 +44,7 @@ export class DataProvider {
       "answer": string
   }>= [];
   public startTest: Date;
+  public examinator: string= "examinator name";
   public timeEstimul:number=3000;
   public timeTest:number=3000;
   public timeTestPostClick:number=1000;
@@ -150,7 +151,7 @@ export class DataProvider {
           "testImg": "15B.jpg"
       },
       {
-          "estimRef": "16_GT.jpg",
+          "estimRef": "16A_GT.jpg",
           "estimImg": "16A.jpg",
           "testRef": "16B_GT.jpg",
           "testImg": "16B.jpg"
@@ -170,7 +171,9 @@ export class DataProvider {
 
   }
   saveUsers(){
+  console.log("hi");  
     this.storage.set('users', JSON.stringify(this.userData));
+    console.log("bye");  
     //this.file.writeFile(this.file.documentsDirectory,"lmiUsers.json",JSON.stringify(this.userData));
     
 

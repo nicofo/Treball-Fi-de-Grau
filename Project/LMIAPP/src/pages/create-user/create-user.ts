@@ -46,20 +46,12 @@ export class CreateUserPage {
     	id: id,
     	name: this.user.name,
     	lastname: this.user.lastname,
-    	//dia,mes,ano
     	birthday:bday.toISOString(),
     	tests:emptyArrayStr,
       results:"ID;n meses edad;ID prueba;Quien;Inicio;Fin;Duracion;D. Media;DS D.;P;PC;E;T. Test;T. Ojos;T. Cara;T. Otro; T. Repetidos;Tiempo Primer T;Tiempo medio;Tap;Press;Stroke"
     });
-      let filename=id;
       this.data.saveUsers();
-    console.log(JSON.stringify({
-    	id: id,
-    	name: this.user.name,
-    	lastname: this.user.lastname,
-    	birthday:this.user.birthday.toISOString(),
-    	test:[]
-    }));	
+    console.log("caca");	
     this.navCtrl.pop();
   }
 

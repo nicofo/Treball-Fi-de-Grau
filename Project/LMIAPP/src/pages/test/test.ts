@@ -79,7 +79,11 @@ export class TestPage {
 	        }
 	    },
       dot:(d1,d2)=>{
-          return d1[0]*d2[0] + d1[1]*d2[1];
+          return (d1[0]*d2[0] + d1[1]*d2[1])/(Math.sqrt(d1[0]*d1[0]+d1[1]*d1[1])*Math.sqrt(d2[0]*d2[0]+d2[1]*d2[1]));
+
+      },
+      distance:(d1,d2)=>{
+          return Math.sqrt((d1[0]-d2[0])*(d1[0]-d2[0]) + (d1[1]-d2[1])*(d1[1]-d2[1]));
 
       },
   		preload:()=>{
@@ -218,16 +222,18 @@ export class TestPage {
             }
         }
         let last= listPoint.length - 1;
-        let distCen=MainGame.dot([listPoint[last].position.x - listPoint[0].position.x, listPoint[last].position.y - listPoint[0].position.y ], [listPoint[Math.trunc(last/2)].position.x - listPoint[0].position.x, listPoint[Math.trunc(last/2)].position.y - listPoint[0].position.y ]);
-
-        let dist1quart=MainGame.dot([listPoint[last].position.x - listPoint[0].position.x, listPoint[last].position.y - listPoint[0].position.y ], [listPoint[Math.trunc(last/4)].position.x - listPoint[0].position.x, listPoint[Math.trunc(last/4)].position.y - listPoint[0].position.y ]);
-
-        let dist3quart=MainGame.dot([listPoint[last].position.x - listPoint[0].position.x, listPoint[last].position.y - listPoint[0].position.y ], [listPoint[Math.trunc(3*last/4)].position.x - listPoint[0].position.x, listPoint[Math.trunc(3*last/4)].position.y - listPoint[0].position.y ]);
-        console.log("distancias "+(listPoint[last].position.x - listPoint[0].position.x)+" "+( listPoint[last].position.y - listPoint[0].position.y )+"  "+(listPoint[Math.trunc(last/2)].position.x - listPoint[0].position.x)+" "+ (listPoint[Math.trunc(last/2)].position.y - listPoint[0].position.y) +"  "+dist3quart);
-        if(Math.abs(distCen)>20 || Math.abs(dist1quart)>20 || Math.abs(dist3quart)>20){
-            if(((distCen>0)&&((dist1quart<0)||(dist3quart<0))) ||((dist1quart>0)&&((distCen<0)||(dist3quart<0))) || ((dist3quart>0)&&((dist1quart<0)||(distCen<0))) ){
-              return "Otro";
-            }
+        console.log(listPoint[last].positionDown.x);
+        console.log(listPoint[last].positionUp.x);
+        let vectrolinea=[listPoint[last].positionUp.x - listPoint[last].positionDown.x, listPoint[last].positionUp.y -listPoint[last].positionDown.y];
+        console.log(vectrolinea);
+        let p3lin=[listPoint[last].positionDown.x + vectrolinea[0]*0.5,listPoint[last].positionDown.y + vectrolinea[1]*0.5];
+        console.log(p3lin);
+        let p3curv=[listPoint[Math.trunc(last*0.5)].position.x, listPoint[Math.trunc(last*0.5)].position.y];
+        
+        let vectrolinea2=[p3curv[0] - listPoint[last].positionDown.x, p3curv[1]-listPoint[last].positionDown.y];
+        console.log(MainGame.dot(vectrolinea,vectrolinea2)  );
+        if(MainGame.dot(vectrolinea,vectrolinea2)<0.75 ){
+        
             return "Curve";   
         }
         return "Stroke";
@@ -277,6 +283,7 @@ export class TestPage {
             "answer": 'na'
         };
         }
+        listPoint = [];
         this.data.listGestures.push(touch);
         this.data.countTouch++;
         console.log(place+ " "+touch.gesture);
@@ -290,7 +297,8 @@ export class TestPage {
                 listPoint.push(phaser.input.activePointer);
             }
         } else if (listPoint.length > 0) {
-
+            
+            listPoint.push(phaser.input.activePointer);
             MainGame.pocessGesture();
             listPoint = [];
 

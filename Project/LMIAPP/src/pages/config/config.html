@@ -7,12 +7,33 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Config</ion-title>
+  <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Settings</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+<form (ngSubmit)="clickSubmit()">
+      <ion-item>
+        <ion-label>Name of examinator</ion-label>
+        <ion-input type="text" [(ngModel)]="tmpName" name="tmpName" value="data.examinator"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Time stimulus(ms)</ion-label>
+        <ion-input type="number" [(ngModel)]="tmpEst" name="tmpEst" min="0" value="data.timeEstimul"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Time test(ms)</ion-label>
+        <ion-input type="number" [(ngModel)]="tmpTest" name="tmpTest" min="0" value="data.timeTest"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Time post clicked face(ms)	</ion-label>
+        <ion-input type="number" [(ngModel)]="tmpCara" name="tmpCara" min="0" value="data.timeTestPostClick"></ion-input>
+      </ion-item>
+      <button ion-button type="submit" block>Save</button>
+    </form>
 </ion-content>
